@@ -1,0 +1,9 @@
+ok so first the optics. if you wanna ID someone at 100m, johnson criteria. for identification not just detection you want like 8 line pairs per meter. a person's roughly half a meter wide. so at 100m that's 5 mrad, and you need about 13 pixels across them. bump that up and it's 26 px per meter.
+
+for a 1280 wide sensor that works out to a pretty narrow fov. like 28 degrees. which honestly is not that zoomed in. kinda caught me off guard.
+
+thermal is where it gets rough. lepton 3.5 is only 160x120, even the 320x240 version. you'd need like a 7 degree fov to get those 13 pixels on a person at 100m. that's a really long lens for a tiny sensor.
+
+but wait you said night vision with IR illuminators. that's not thermal, that's just a normal camera with ir light on it. so we're looking at nir, not a lepton. with a 1080p sensor it's actually fine, 42 degree fov covers it. wide angle doesn't even need zoom.
+
+the catch is you want identification, not just spotting them. nato has a stricter standard, stanag 4559, about 6 cycles across the target and covering 150% of it. that changes the numbers a good bit.
