@@ -3,6 +3,7 @@
 Usage:
   python score.py <file.txt>     score a text file
   cat file | python score.py     or score stdin
+  python score.py --formal <f>   score against the formal register
   python score.py --selfcheck    validate profile vs held-out user/AI blocks
   python score.py --sample N     print N random user messages (see the voice)
 """
@@ -37,15 +38,16 @@ def get_path(casual, key):
     return cur
 
 
-def score_features(casual):
+def score_features(feats, register="casual"):
     with open(PROFILE, encoding="utf-8") as f:
         prof = json.load(f)
+    refs = prof.get(register, prof["casual"])
     out = []
     totals = 0.0
     wsum = 0.0
     for key, w, tol in FEATURES:
-        ref = get_path(prof["casual"], key)
-        val = get_path(casual, key)
+        ref = get_path(refs, key)
+        val = get_path(feats, key)
         if ref == 0:
             sim = 1.0 if abs(val - ref) < 1e-6 else max(0.0, 1.0 - abs(val - ref) / 2.0)
         else:
@@ -58,15 +60,19 @@ def score_features(casual):
     return round(totals / wsum * 100), out
 
 
-def score_text(text):
+def score_text(text, register="casual"):
     c = X.text_features(text)
     if c is None:
         return None, None
-    return score_features(c)
+    return score_features(c, register)
 
 
 def main():
     args = sys.argv[1:]
+    register = "casual"
+    if "--formal" in args:
+        register = "formal"
+        args.remove("--formal")
     if not args or (args and args[0] in ("-h", "--help")):
         print(__doc__)
         return
@@ -81,8 +87,11 @@ def main():
     else:
         with open(args[0], encoding="utf-8", errors="replace") as f:
             text = f.read()
-    score, rows = score_text(text)
-    print(f"OVERALL VOICE MATCH: {score}/100")
+    score, rows = score_text(text, register)
+    if score is None:
+        print("no scorable text")
+        return
+    print(f"OVERALL VOICE MATCH ({register}): {score}/100")
     print("  (higher = closer to your writing)")
     print()
     for key, ref, val, sim, w in rows:
