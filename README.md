@@ -65,12 +65,14 @@ Inside opencode, `/v2` runs that whole chain. The formal register currently in t
 
 Ran the poet scenario through real detectors:
 
-| Detector | AI draft | casual rewrite |
-|---|---|---|
-| ZeroGPT | 100% AI | 0% AI, "Human written" |
-| GPTZero | — | 100% AI, "highly confident" |
+| Detector | AI draft | casual rewrite | genuine human (control) |
+|---|---|---|---|
+| ZeroGPT | 100% AI | 0% AI, "Human written" | — |
+| GPTZero | — | 100% AI, "highly confident" | 100% Human |
 
-GPTZero is the harder bar: it flags standalone short fragments ("changed everything.") and AI-vocab words (`occurrence`, `significantly`) at the sentence level. The ruleset encodes that feedback — fragments are a tell, so burstiness comes from the *swing* between real winders and short sentences, not from isolated staccato lines. Detectors also disagree wildly, so treat any single score as noisy. Longer text (500+ words) and the semi-formal register are the levers if GPTZero matters.
+GPTZero is the harder bar: it flags standalone short fragments ("changed everything.") and AI-vocab words (`occurrence`, `significantly`) at the sentence level. The ruleset encodes that feedback — fragments are a tell, so burstiness comes from the *swing* between real winders and short sentences, not from isolated staccato lines. Detectors also disagree wildly, so treat any single score as noisy.
+
+**Tested and disproven:** longer text (~550 words) and the semi-formal register both still return 100% AI on GPTZero. The genuine-human control (vault chat prose, typos included) scores 100% Human — GPTZero correctly separates mimicry from real writing and is not beatable via style-surface features. Treat the plugin's goal as *reads like you* plus passing the ZeroGPT-class checkers, not GPTZero evasion. Control text kept local (not pushed).
 
 ## Status / roadmap
 
