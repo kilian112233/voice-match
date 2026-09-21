@@ -21,7 +21,7 @@ AI detectors measure things like perplexity (word predictability) and burstiness
 
 - **casual** — your raw fingerprint: lowercase starts, contractions, fillers, abbreviations, natural SPAG at your measured rates.
 - **semi-formal** — whole sentences, mild contractions, no slang, no `and`/`so` chains. Mild imperfections only.
-- **formal** — no contractions, complete grammar, still short sentences and direct voice. Zero imperfections.
+- **formal** — no contractions, complete grammar, still short sentences and direct voice. Zero imperfections. Chat shorthand (`idk`, `tbh`) does not carry over — abbreviations only the ones you actually use in formal writing.
 
 The imperfection dial is calibrated to habits measured from your own messages (missing commas, lowercase starts, run-ons). Staged/random typos are detectable and banned.
 
@@ -42,9 +42,35 @@ python tools/score.py --selfcheck
 
 Inside opencode, the `voice-match` agent + `/voice` command rewrite text in your voice (casual by default; prefix with `semi-formal:` or `formal:` to switch register). The agent reads `style_profile.json` + `rules/humanize.md` as ground truth and prints a 3-5 line confirmation before rewriting.
 
+Score against a specific register:
+
+```
+python tools/score.py --formal my-draft.txt    # score against the formal register
+```
+
+Build the formal register from transcribed schoolbook text:
+
+```
+python tools/transcribe.py <scans-dir> --report     # photos -> text via vision LLM
+python tools/build_formal.py <scans-dir>            # text -> formal fingerprint
+```
+
+Inside opencode, `/v2` runs that whole chain. The formal register currently in the profile is a placeholder built from `demo/sample-schoolbook.txt` until real scans replace it.
+
 ## Demo
 
-`demo/input.txt` is an AI-style paragraph. `demo/casual.txt`, `demo/semi-formal.txt`, `demo/formal.txt` are the same content rewritten in your voice at each register.
+`demo/input.txt` is an AI-style paragraph. `demo/casual.txt`, `demo/semi-formal.txt`, `demo/formal.txt` are the same content rewritten in your voice at each register. `demo/poet-ai.txt` / `demo/poet-voice.txt` show a full everyday scenario (essay about Emily Dickinson) before and after rewriting; `demo/rewrite-test.txt` is a live optics explanation rewritten in casual voice.
+
+### Live detector results (2026-09-21)
+
+Ran the poet scenario through real detectors:
+
+| Detector | AI draft | casual rewrite |
+|---|---|---|
+| ZeroGPT | 100% AI | 0% AI, "Human written" |
+| GPTZero | — | 100% AI, "highly confident" |
+
+GPTZero is the harder bar: it flags standalone short fragments ("changed everything.") and AI-vocab words (`occurrence`, `significantly`) at the sentence level. The ruleset encodes that feedback — fragments are a tell, so burstiness comes from the *swing* between real winders and short sentences, not from isolated staccato lines. Detectors also disagree wildly, so treat any single score as noisy. Longer text (500+ words) and the semi-formal register are the levers if GPTZero matters.
 
 ## Status / roadmap
 
@@ -54,4 +80,5 @@ Inside opencode, the `voice-match` agent + `/voice` command rewrite text in your
 - [x] detector ruleset
 - [x] opencode agent + `/voice`
 - [x] `tools/transcribe.py` — photos of old handwritten schoolbooks → text via any OpenAI-compatible vision endpoint (local Qwen-VL / Ollama default, or Gemini via URL+key). Model flags uncertain words inline as `[unclear]`; `--report` aggregates flagged spans for escalation instead of silently guessing. Run: `transcribe.py <dir> --dry-run` to preview, then without the flag. Classic OCR can't read messy handwriting, so this is the route to a real formal-register fingerprint.
+- [x] `tools/build_formal.py` + `score.py --formal` — turn transcribed schoolbook text into a formal register (pipeline verified on `demo/sample-schoolbook.txt`; formal register currently placeholder).
 - [ ] v2: scan the schoolbooks, run `transcribe.py`, rebuild the profile with the formal fingerprint.
