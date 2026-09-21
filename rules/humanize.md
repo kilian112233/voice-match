@@ -30,11 +30,12 @@ writing overuses them. The user never uses them in casual chat.
 
 Tier 1 (kill on sight): delve, tapestry, underscore, showcase, utilize,
 leverage, facilitate, elucidate, embark, endeavor, encompass, multifaceted,
-testament, galvanize, epitomize, unravel, conceptualize, seamless, robust.
+testament, galvanize, epitomize, unravel, conceptualize, seamless, robust,
+occurrence, significantly.
 
 Tier 2 (avoid): comprehensive, cutting-edge, innovative, streamline, empower,
 foster, intricate, profound, meticulous, pivotal, groundbreaking, deep dive,
-follow-up (as noun), "Delve into".
+follow-up (as noun), "Delve into", notably, arguably, undoubtedly.
 
 Tier 3 (prefer the user's plain word): crucial→important/need, essential→have
 to, vital→matters, significant→big/really matters, remarkable, exceptional,
@@ -50,6 +51,12 @@ Phrase tells (never): "In today's fast-paced world", "In the digital age",
 
 - **Vary sentence length hard.** Target the user profile: ~60% sentences under
   12 words, a few over 25. Follow a 3-word sentence with a 28-word one.
+- **No fragment breadcrumbs.** Isolated one-line fragments ("changed
+  everything." / "guess the quiet ones...") are a GPTZero sentence-level tell.
+  Bury fragments mid-paragraph after a longer sentence — the burstiness comes
+  from the *swing*, not from standalone staccato lines. Live GPTZero test
+  flagged every standalone short line as "High AI impact" while the same
+  short sentences inside flowing paragraphs did not.
 - **Avoid uniform paragraph rhythm.** Don't open every sentence with The / This
   / It. Vary openers: subject, preposition, or just start mid-thought.
 - **Prefer short sentences for important points.** Long winding sentence, then
@@ -95,7 +102,10 @@ When rewriting:
   line, keep short sentences and directness, only mild imperfections (missing
   commas, stray lowercase); no misspellings.
 - **formal**: complete grammatical sentences, no contractions spelled out
-  ("do not", "cannot"), no slang or abbreviations, structured but still short
+  ("do not", "cannot"), no slang; abbreviations only the user actually uses
+  (idk/tbh do NOT carry over here — casual chat shorthand reads wrong in
+  formal register; wait for the schoolbook samples to see which formal
+  abbreviations, if any, the user writes), structured but still short
   sentences and no AI connective words; clean SPAG. Still the user's vocabulary
   and directness — formal does not mean inflated diction.
 
@@ -118,6 +128,9 @@ deviate from the above defaults only when the profile numbers clearly differ.
 - Do NOT add random typos or misspellings artificially. Staged errors are a
   known detector cue.
 - Do NOT leave any Tier-1 word even "ironically". Do not say "delve", ever.
+- Do NOT make every paragraph the same staccato of short sentences — GPTZero's
+  sentence-level model nukes uniform rhythm even when it's "informal".
+  Alternate actual winders with the short ones (the user's real std is ~11).
 - Do NOT produce perfectly symmetrical lists or perfectly balanced paragraphs.
 - Do NOT write "here's a summary of ..." AI-style recaps. Answer.
 - Do NOT claim to be human. Just write like the user.
@@ -132,3 +145,7 @@ deviate from the above defaults only when the profile numbers clearly differ.
   model-agnostic detection.
 - EvalHub / WriteHybrid craft guides — burstiness + perplexity + human voice
   (stance, recurring analogies, concrete detail, conceding counterarguments).
+- Live test 2026-09-21 (ZeroGPT + GPTZero on demo/poet-voice.txt): ZeroGPT
+  0% AI ("Human written"), GPTZero 100% AI "highly confident" — GPTZero
+  flagged standalone fragments and "AI Vocab" (occurrence, significantly).
+  Detectors disagree wildly; GPTZero is the harder bar.
